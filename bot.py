@@ -159,7 +159,9 @@ from helper.downloader import (
 from helper.manager import (
     handle_url
 )
-
+from helper.ping import (
+    register_ping_handlers
+)
 # ==================== LOGGING ====================
 logging.basicConfig(
     format=(
@@ -423,7 +425,15 @@ async def main():
             f"❌ Manager handler failed: {e}"
         )
         return
-
+     
+     # ==================== PING ====================
+    try:
+        register_ping_handlers(app)
+    except Exception as e:
+        print(
+            f"❌ Ping handlers failed: {e}"
+        )
+        return
     # ============================================================
     # ALL HANDLERS REGISTERED
     # ============================================================
