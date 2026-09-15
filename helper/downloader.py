@@ -49,9 +49,10 @@ YOINKU_API_KEYS = [
 
 TERABOX_API_KEYS = [
     # Apni existing TeraBox API key yahan rakho
-    "pk_v1dvx9943oilv11cqwvef",
+    "xapi_3cdb20c3db47abb5ac68deab51ba9b27",
     "pk_btyy0sy724jp23yjm28gk",
     "pk_1bjkrvzo3cfxabid36mh4j",
+    "pk_v1dvx9943oilv11cqwvef",
 ]
 
 INSTAGRAM_API_URLS = [
