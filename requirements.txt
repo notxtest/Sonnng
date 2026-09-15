@@ -1,0 +1,7 @@
+pyrogram==2.3.50
+TgCrypto 
+pymongo
+requests
+aiohttp
+aiofiles
+psutil
