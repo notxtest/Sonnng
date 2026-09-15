@@ -1,5 +1,6 @@
-pyrogram==2.3.50
-TgCrypto 
+pyrofork==2.3.50
+TgCrypto
+pyromod 
 pymongo
 requests
 aiohttp
