@@ -92,7 +92,7 @@ TERABOX_DOMAINS = [
 def is_terabox_url(url: str) -> bool:
     """Check karo ki URL TeraBox ka hai ya nahi"""
     url_lower = str(url or "").lower()
-    
+
     for domain in TERABOX_DOMAINS:
         # Domain ke aage '/' ya '://' ho — taaki 'x.com' type false match na ho
         if (
@@ -100,7 +100,7 @@ def is_terabox_url(url: str) -> bool:
             or f"://www.{domain}/" in url_lower
         ):
             return True
-    
+
     return False
 
 # ============================================================
@@ -371,11 +371,13 @@ async def async_download_with_progress(
     """
     Async file download with live progress.
     """
-
+    
     async with session.get(
         url,
         timeout=aiohttp.ClientTimeout(
-            total=300
+                total=None,
+                sock_connect=30,
+                sock_read=120
         ),
         allow_redirects=True
     ) as resp:
@@ -403,8 +405,8 @@ async def async_download_with_progress(
             )
         )
 
-        if total <= 0:
-            total = 1
+        #if total <= 0:
+       #     total = 1
 
         downloaded = 0
 
@@ -418,7 +420,7 @@ async def async_download_with_progress(
         ) as f:
 
             async for chunk in resp.content.iter_chunked(
-                65536
+                1024 * 1024
             ):
 
                 if not chunk:
@@ -621,7 +623,7 @@ def call_yoinku_sync(url):
             data = resp.json()
 
             if data.get("ok"):
-                
+
                 return (
                     data.get("data", {}),
                     "Yoinku"
@@ -671,7 +673,7 @@ def call_fastsaver_youtube_sync(url):
                 data = {}
 
             if data.get("ok"):
-            
+
                 # call_fastsaver_youtube_sync me
                 print(f"🟥 YouTube API RESPONSE: {data}")
                 return (
@@ -1352,7 +1354,7 @@ async def fetch_video_info_async(
             )
 
             return data, api_used
- 
+
         print(
             "❌ TeraBox video info failed"
         )
@@ -1672,7 +1674,7 @@ async def download_and_send(
     elif api_used == "TeraBox":
 
         files = data.get("list", [])
- 
+
         if not files:
             await safe_edit_message(
                 client, chat_id, proc_id,
@@ -1682,7 +1684,7 @@ async def download_and_send(
             return False
 
         file_info = files[0]
- 
+
         download_url = file_info.get("normal_dlink")
         file_name = file_info.get("name", "video.mp4")
         file_size = file_info.get("size", 0)
@@ -1711,7 +1713,7 @@ async def download_and_send(
             f"📁 <b>{html.escape(str(file_name))}</b>\n"
             f"📦 Size: {format_size(file_size)}"
         )
- 
+
         # Session data save karo (download ke liye)
         terabox_data[user_id] = {
             "url": url,
@@ -1720,7 +1722,7 @@ async def download_and_send(
             "download_url": download_url,
             "file_name": file_name,
         }
- 
+
         # Download button
         keyboard = InlineKeyboardMarkup([
             [
@@ -2729,20 +2731,20 @@ async def perform_download(
         # GET FILE SIZE
         # ====================================================
 
-        total = 0
+       # total = 0
 
-        try:
+      #  try:
 
-            async with aiohttp.ClientSession() as session:
+            #async with aiohttp.ClientSession() as session:
 
-                total = await async_head(
-                    session,
-                    download_url
-                )
+               # total = await async_head(
+                 #   session,
+                  #  download_url
+              #  )
 
-        except Exception:
+      #  except Exception:
 
-            total = 0
+          #  total = 0
 
         # ====================================================
         # DOWNLOAD
@@ -3028,7 +3030,7 @@ async def perform_download(
                     )
 
                     if not deducted:
- 
+
                         await log_to_channel(
                             client,
                             user_id,
@@ -3267,7 +3269,7 @@ async def handle_youtube_callback(
                             response_data = {}
 
                         if response_data.get("ok"):
-                            
+
 
                             return extract_yoinku_download(
                                 response_data
@@ -3296,7 +3298,7 @@ async def handle_youtube_callback(
                 await processing_task
         except Exception:
             pass
-            
+
         if not download_url:
 
             await safe_edit_message(
@@ -3746,7 +3748,7 @@ async def download_callback(
                 except Exception:
                     pass
                 return
-    
+
         username = (
             callback_query.from_user.username
             or callback_query.from_user.first_name
